@@ -5,7 +5,8 @@
     <title>Search prototype</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+		
     <style>
         body { margin:0; padding:0; }
         #map { position:absolute; z-index:0;top:0; bottom:0; width:100%; }
@@ -29,6 +30,8 @@
 	outline-color: rgba(0,0,0,0)
 }
 </style>
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 <div id='map'></div>
 <button id='fly'>поиск</button>
 <script>
@@ -54,6 +57,111 @@ var initialRadius = 40;
 var radius = initialRadius;
 var maxRadius = 150;
 
+
+var speedFactor = 30; // number of frames per longitude degree
+var animation; // to store and cancel the animation
+var startTime = 0;
+var progress = 0; // progress = timestamp - startTime
+var resetTime = false;
+
+const geojson2 = {
+	"type": "FeatureCollection",
+	"features": [{
+	"type": "Feature",
+	"geometry": {
+	"type": "LineString",
+	"coordinates": [
+          [
+            37.642250061035156,
+            55.73669117911308
+          ],
+          [
+            37.642807960510254,
+            55.73536229013844
+          ],
+          [
+            37.64316201210022,
+            55.7345709756667
+          ],
+          [
+            37.642770409584045,
+            55.734202495514765
+          ],
+          [
+            37.642523646354675,
+            55.73400617270202
+          ]
+        ]
+	}
+	}]
+}
+
+const geojson = {
+	"type": "FeatureCollection",
+	"features": [{
+	"type": "Feature",
+	"geometry": {
+	"type": "LineString",
+	"coordinates": [
+          [
+            37.643558979034424,
+            55.73482166099493
+          ],
+          [
+            37.64334976673126,
+            55.73467668654358
+          ],
+          [
+            37.64314591884613,
+            55.73452869123579
+          ],
+          [
+            37.64290452003479,
+            55.734281024363405
+          ],
+          [
+            37.64270603656769,
+            55.73409678335368
+          ],
+          [
+            37.642523646354675,
+            55.73400919306045
+          ]
+        ]
+	}
+	}]
+}
+
+const steps = 150;
+let progressturf = 0;
+
+const steps2 = 200;
+let progressturf2 = 0;
+
+const animateGeojson = {
+      'type': 'FeatureCollection',
+      'features': [{
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': []
+        }
+      }]
+    };
+
+		const animateGeojson2 = {
+      'type': 'FeatureCollection',
+      'features': [{
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': []
+        }
+      }]
+    };
+
 function addDataLayer() {
   map.addSource('circleData', {
     type: 'geojson',
@@ -62,6 +170,41 @@ function addDataLayer() {
         coordinates: [37.642524, 55.733991]
     },
   });
+	map.addLayer({
+  	'id': 'line-animation',
+  	'type': 'line',
+  	'source': {
+  	'type': 'geojson',
+  	'data': geojson
+  	},
+  	'layout': {
+  	'line-cap': 'round',
+  	'line-join': 'round'
+  	},
+  	'paint': {
+  	'line-color': '#fff',
+  	'line-width': 4,
+  	'line-opacity': 1
+		}
+	});
+	map.addLayer({
+  	'id': 'line-animation2',
+  	'type': 'line',
+  	'source': {
+  	'type': 'geojson',
+  	'data': geojson2
+  	},
+  	'layout': {
+  	'line-cap': 'round',
+  	'line-join': 'round',
+		'visibility': 'none'
+  	},
+  	'paint': {
+  	'line-color': '#fff',
+  	'line-width': 4,
+  	'line-opacity': 1
+		}
+	});
 	map.addLayer({
     id: 'data',
     type: 'circle',
@@ -86,7 +229,6 @@ function addDataLayer() {
       
     }
   });
-
 	
 }
 
@@ -316,64 +458,104 @@ document.getElementById('fly').addEventListener('click', function() {
 	});
 	map.on('style.load', function () {
   // Triggered when `setStyle` is called.
-  
-	
-		
- 
-	addDataLayer();
-		////
-		function animateMarker(timestamp) {
-        setTimeout(function(){
-            requestAnimationFrame(animateMarker);
-            radius += (maxRadius - radius) / framesPerSecond;
-            opacity -= ( .9 / framesPerSecond );
-            map.setPaintProperty('data', 'circle-radius', radius);
-            map.setPaintProperty('data', 'circle-opacity', opacity);
-            if (opacity <= 0) {
-                radius = initialRadius;
-                opacity = initialOpacity;
-            } 
-        }, 1000 / framesPerSecond);
-        
+	// Marker animation
+  	addDataLayer();
+	  function animateMarker(timestamp) {
+      setTimeout(function(){
+        requestAnimationFrame(animateMarker);
+        radius += (maxRadius - radius) / framesPerSecond;
+        opacity -= ( .9 / framesPerSecond );
+        map.setPaintProperty('data', 'circle-radius', radius);
+        map.setPaintProperty('data', 'circle-opacity', opacity);
+        if (opacity <= 0) {
+            radius = initialRadius;
+            opacity = initialOpacity;
+        } 
+      }, 1000 / framesPerSecond);
     }
-    // Start the animation.
-    animateMarker(0);
-		///
+  	animateMarker(0);
 		
-		
-		
-		
-		
+		//Line animation
+		const routeLength = turf.length(geojson, { units: 'kilometers' });
+    const route = [];
 
+    for (let i = 0; i < routeLength; i += (routeLength / steps)) {
+      const segment = turf.along(geojson.features[0], i, { units: 'kilometers' });
+      route.push(segment.geometry.coordinates);
+    }
+
+    // animated in a circle as a sine wave along the map.
+    const animateLine = () => {
+      if (progressturf === steps - 1) {
+        cancelAnimationFrame(animation);
+				map.setLayoutProperty('line-animation', 'visibility', 'none');
+				map.setLayoutProperty('line-animation2', 'visibility', 'visible');
+
+///
+		//Line animation
+		const routeLength2 = turf.length(geojson2, { units: 'kilometers' });
+    const route2 = [];
+
+    for (let i = 0; i < routeLength2; i += (routeLength2 / steps2)) {
+      const segment2 = turf.along(geojson2.features[0], i, { units: 'kilometers' });
+      route2.push(segment2.geometry.coordinates);
+    }
+
+    // animated in a circle as a sine wave along the map.
+    const animateLine2 = () => {
+      if (progressturf2 === steps2 - 1) {
+        cancelAnimationFrame(animation2);
+				map.setLayoutProperty('line-animation2', 'visibility', 'none');
+        return;
+      } else {
+        progressturf2 += 1;
+      }
+
+      // append new coordinates to the lineString
+      animateGeojson2.features[0].geometry.coordinates.push(route2[progressturf2]);
+      // then update the map
+      map.getSource('line-animation2').setData(animateGeojson2);
+
+      // Request the next frame of the animation.
+      animation2 = requestAnimationFrame(animateLine2);
+    };
+
+    animateLine2();
+///
+
+        return;
+      } else {
+        progressturf += 1;
+      }
+
+      // append new coordinates to the lineString
+      animateGeojson.features[0].geometry.coordinates.push(route[progressturf]);
+      // then update the map
+      map.getSource('line-animation').setData(animateGeojson);
+
+      // Request the next frame of the animation.
+      animation = requestAnimationFrame(animateLine);
+    };
+
+    animateLine();
 	});
 	
-		
-		
+	//Flyto animation
+  var target = isAtStart ? end : start;
+  isAtStart = !isAtStart;
+   
+  map.flyTo({
+  	center: target,
+  	zoom: 14.5,
+  	bearing: 0,
+  	speed: 0.05, 
+  	curve: 1,
+  	easing: function (t) { return t; }
+  });
 
-			// depending on whether we're currently at point a or b, aim for
-      // point a or b
-      var target = isAtStart ? end : start;
-       
-      // and now we're at the opposite point
-      isAtStart = !isAtStart;
-       
-      map.flyTo({
-      // These options control the ending camera position: centered at
-      // the target, at zoom level 9, and north up.
-      center: target,
-      zoom: 14.5,
-      bearing: 0,
-       
-      // These options control the flight curve, making it move
-      // slowly and zoom out almost completely before starting
-      // to pan.
-      speed: 0.05, // make the flying slow
-      curve: 1, // change the speed at which it zooms out
-       
-      // This can be any easing function: it takes a number between
-      // 0 and 1 and returns another number between 0 and 1.
-      easing: function (t) { return t; }
-      });
+	
+  
+
 
 });
 
