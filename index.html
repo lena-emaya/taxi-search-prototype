@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Add an animated icon to the map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; z-index:0;top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+<style>
+#fly {
+  display: block;
+  position: absolute;
+	bottom: 0px;
+  width: 100%;
+  height: 45px;
+  padding: 10px;
+  border: none;
+ 
+  font-size: 12px;
+  text-align: center;
+  color: #000;
+  background: #fff;
+}
+</style>
+<div id='map'></div>
+<button id='fly'>поиск</button>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoieWFjb25zdHJ1Y3QiLCJhIjoiY2l6NDFpN3k1MDAyZjJxbHdhcHU2eHQ0ZyJ9.8TtgxnHPThgkyXRDGGYMlQ';
+
+var start = [37.642524, 55.733991];
+var end = [37.642524, 55.733991];
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/yaconstruct/cjx39riro074v1dpkcudfer4w',
+    center: [37.642524, 55.733991],
+    zoom: 16
+});
+
+
+var isAtStart = true;
+
+var framesPerSecond = 50; 
+var initialOpacity = 1
+var opacity = initialOpacity;
+var initialRadius = 40;
+var radius = initialRadius;
+var maxRadius = 150;
+
+function addDataLayer() {
+  map.addSource('circleData', {
+    type: 'geojson',
+    data: {
+        type: 'Point',
+        coordinates: [37.642524, 55.733991]
+    },
+  });
+	
+	map.addLayer({
+    id: 'data1',
+    type: 'circle',
+    source: 'circleData',
+		layout: {
+			'visibility': 'visible'
+		},
+    paint: {
+      "circle-radius": 5,
+      "circle-color": "#ccc",
+      "circle-stroke-width": 1,
+      "circle-stroke-color": "#fff"
+    },
+  });
+
+	map.addLayer({
+    id: 'data',
+    type: 'circle',
+    source: 'circleData',
+    paint: {
+        "circle-radius": initialRadius,
+        "circle-radius-transition": {duration: 0},
+        "circle-opacity-transition": {duration: 0},
+        "circle-color": "#ccc"
+    },
+  });
+}
+
+
+	
+document.getElementById('fly').addEventListener('click', function() {
+	map.setStyle('mapbox://styles/yaconstruct/cjy5k9lhf0s1l1co5rn02sj8d', true);
+	map.on('style.load', function () {
+  // Triggered when `setStyle` is called.
+  
+	
+		
+ 
+	addDataLayer();
+		////
+		function animateMarker(timestamp) {
+        setTimeout(function(){
+            requestAnimationFrame(animateMarker);
+            radius += (maxRadius - radius) / framesPerSecond;
+            opacity -= ( .9 / framesPerSecond );
+            map.setPaintProperty('data', 'circle-radius', radius);
+            map.setPaintProperty('data', 'circle-opacity', opacity);
+            if (opacity <= 0) {
+                radius = initialRadius;
+                opacity = initialOpacity;
+            } 
+        }, 1000 / framesPerSecond);
+        
+    }
+    // Start the animation.
+    animateMarker(0);
+		///
+		
+		
+		
+		
+		
+
+	});
+	
+		
+		
+
+			// depending on whether we're currently at point a or b, aim for
+      // point a or b
+      var target = isAtStart ? end : start;
+       
+      // and now we're at the opposite point
+      isAtStart = !isAtStart;
+       
+      map.flyTo({
+      // These options control the ending camera position: centered at
+      // the target, at zoom level 9, and north up.
+      center: target,
+      zoom: 14.5,
+      bearing: 0,
+       
+      // These options control the flight curve, making it move
+      // slowly and zoom out almost completely before starting
+      // to pan.
+      speed: 0.05, // make the flying slow
+      curve: 1, // change the speed at which it zooms out
+       
+      // This can be any easing function: it takes a number between
+      // 0 and 1 and returns another number between 0 and 1.
+      easing: function (t) { return t; }
+      });
+
+});
+
+
+
+
+</script>
+
+</body>
+</html>
