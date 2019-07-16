@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>Add an animated icon to the map</title>
+    <title>Search prototype</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
@@ -26,6 +26,7 @@
   text-align: center;
   color: #000;
   background: #fff;
+	outline-color: rgba(0,0,0,0)
 }
 </style>
 <div id='map'></div>
@@ -40,7 +41,7 @@ var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/yaconstruct/cjx39riro074v1dpkcudfer4w',
     center: [37.642524, 55.733991],
-    zoom: 16
+    zoom: 12.5
 });
 
 
@@ -61,22 +62,6 @@ function addDataLayer() {
         coordinates: [37.642524, 55.733991]
     },
   });
-	
-	map.addLayer({
-    id: 'data1',
-    type: 'circle',
-    source: 'circleData',
-		layout: {
-			'visibility': 'visible'
-		},
-    paint: {
-      "circle-radius": 5,
-      "circle-color": "#ccc",
-      "circle-stroke-width": 1,
-      "circle-stroke-color": "#fff"
-    },
-  });
-
 	map.addLayer({
     id: 'data',
     type: 'circle',
@@ -88,12 +73,247 @@ function addDataLayer() {
         "circle-color": "#ccc"
     },
   });
+	
+	map.addLayer({
+    id: 'data1',
+    type: 'symbol',
+    source: 'circleData',
+		layout: {
+			'visibility': 'visible',
+			'icon-image': "white"
+		},
+    paint: {
+      
+    }
+  });
+
+	
 }
 
+map.on('load', function () {
+	map.addSource('routeline', {
+    type: 'geojson',
+		lineMetrics: true,
+    data: {
+        type: 'LineString',
+        coordinates: [
+          [
+            37.642550468444824,
+            55.73401523377664
+          ],
+          [
+            37.64247536659241,
+            55.73391858220548
+          ],
+          [
+            37.64221787452698,
+            55.73380984890187
+          ],
+          [
+            37.642099857330315,
+            55.733894419275295
+          ],
+          [
+            37.640769481658936,
+            55.73585760859076
+          ],
+          [
+            37.640254497528076,
+            55.73663681636078
+          ],
+          [
+            37.6396107673645,
+            55.737778418258344
+          ],
+          [
+            37.63937473297119,
+            55.73844282727089
+          ],
+          [
+            37.63931035995483,
+            55.739143464522186
+          ],
+          [
+            37.63922452926636,
+            55.74009776054474
+          ],
+          [
+            37.63907432556152,
+            55.74042390699945
+          ],
+          [
+            37.63748645782471,
+            55.74269477712104
+          ],
+          [
+            37.635297775268555,
+            55.74479642214276
+          ],
+          [
+            37.635812759399414,
+            55.74512252932866
+          ],
+          [
+            37.6371431350708,
+            55.745943824239376
+          ],
+          [
+            37.63883829116821,
+            55.747067037819136
+          ],
+          [
+            37.64044761657715,
+            55.748250604236276
+          ],
+          [
+            37.641316652297974,
+            55.748872566073736
+          ],
+          [
+            37.64146685600281,
+            55.749168447350804
+          ],
+          [
+            37.64165997505188,
+            55.749524709584264
+          ],
+          [
+            37.642067670822144,
+            55.749989657097
+          ],
+          [
+            37.64236807823181,
+            55.75027949170373
+          ],
+          [
+            37.64270067214966,
+            55.75046667540944
+          ],
+          [
+            37.6422393321991,
+            55.75068404890833
+          ],
+          [
+            37.639031410217285,
+            55.75320187033113
+          ],
+          [
+            37.63909578323364,
+            55.75331054961135
+          ]
+        ]
+    }
+  });
+	map.addSource('a', {
+    type: 'geojson',
+    data: {
+        type: 'Point',
+        coordinates: [37.642524, 55.733991]
+    }
+  });
+	map.addSource('b', {
+    type: 'geojson',
+    data: {
+        type: 'Point',
+        coordinates: [37.6390957832, 55.7532803609]
+    }
+  });  
+	map.addLayer({
+    id: 'routeline-stroke',
+    type: 'line',
+    source: 'routeline',
+		layout: {
+			'visibility': 'visible'
+		},
+    paint: {
+      'line-width': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        9,
+        5,
+        22,
+        13
+      ],
+      // 'line-gradient' must be specified using an expression
+      // with the special 'line-progress' property
+      'line-color': "#fff"
+		},
+		layout: {
+			'line-cap': 'round',
+			'line-join': 'round'
+		}
+  });
+	map.addLayer({
+    id: 'routeline',
+    type: 'line',
+    source: 'routeline',
+		layout: {
+			'visibility': 'visible'
+		},
+    paint: {
+      'line-width': [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        9,
+        3,
+        22,
+        10
+      ],
+      // 'line-gradient' must be specified using an expression
+      // with the special 'line-progress' property
+      'line-gradient': [
+      'interpolate',
+      ['linear'],
+      ['line-progress'],
+      0, "#1CC052",
+      0.1, "#1CC052",
+      0.3, "#FCE000",
+      0.5, "#1CC052",
+      0.7, "#EB001B",
+      1, "#FCE000"
+      ]
+		},
+		layout: {
+			'line-cap': 'round',
+			'line-join': 'round'
+		}
+  });
+	map.addLayer({
+    id: 'a',
+    type: 'symbol',
+    source: 'a',
+		layout: {
+			'visibility': 'visible',
+			"icon-image": "pin_pin"
+		},
+    paint: {
+      
+    },
+  });
+	map.addLayer({
+    id: 'b',
+    type: 'symbol',
+    source: 'b',
+		layout: {
+			'visibility': 'visible',
+			"icon-image": "Default"
+		},
+		
+    paint: {
+      
+    },
+  });
+});
 
 	
 document.getElementById('fly').addEventListener('click', function() {
 	map.setStyle('mapbox://styles/yaconstruct/cjy5k9lhf0s1l1co5rn02sj8d', true);
+  map.setZoom(16);
+	map.jumpTo({
+		center:	[37.642524, 55.733991]
+	});
 	map.on('style.load', function () {
   // Triggered when `setStyle` is called.
   
