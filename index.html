@@ -72,6 +72,94 @@ var startTime = 0;
 var progress = 0; // progress = timestamp - startTime
 var resetTime = false;
 
+const geojson3 = {
+	"type": "FeatureCollection",
+	"features": [{
+	"type": "Feature",
+	"geometry": {
+	"type": "LineString",
+	"coordinates": [
+          [
+            37.64170289039612,
+            55.73324805534146
+          ],
+          [
+            37.64234662055969,
+            55.7335984221667
+          ],
+          [
+            37.64370918273926,
+            55.734335390396815
+          ],
+          [
+            37.64381647109985,
+            55.734383715696296
+          ],
+          [
+            37.644020318984985,
+            55.73431575822681
+          ],
+          [
+            37.64421075582504,
+            55.734314248059476
+          ],
+          [
+            37.64436364173889,
+            55.73435351239113
+          ],
+          [
+            37.645254135131836,
+            55.73499381745656
+          ],
+          [
+            37.64596223831177,
+            55.7354951810719
+          ],
+          [
+            37.64618754386902,
+            55.73560390968091
+          ],
+          [
+            37.64617681503296,
+            55.73580324467746
+          ],
+          [
+            37.646015882492065,
+            55.73611130585164
+          ],
+          [
+            37.64584422111511,
+            55.7363227189761
+          ],
+          [
+            37.64523267745971,
+            55.7359663361902
+          ],
+          [
+            37.643998861312866,
+            55.735132750187745
+          ],
+          [
+            37.643558979034424,
+            55.7348126001075
+          ],
+          [
+            37.64308154582977,
+            55.73448942708031
+          ],
+          [
+            37.6426738500595,
+            55.734123966508164
+          ],
+          [
+            37.642534375190735,
+            55.73401825413439
+          ]
+        ]
+	}
+	}]
+}
+
 const geojson2 = {
 	"type": "FeatureCollection",
 	"features": [{
@@ -146,6 +234,9 @@ let progressturf = 0;
 const steps2 = 400;
 let progressturf2 = 0;
 
+const steps3 = 400;
+let progressturf3= 0;
+
 const animateGeojson = {
       'type': 'FeatureCollection',
       'features': [{
@@ -158,17 +249,29 @@ const animateGeojson = {
       }]
     };
 
-		const animateGeojson2 = {
-      'type': 'FeatureCollection',
-      'features': [{
-        'type': 'Feature',
-        'properties': {},
-        'geometry': {
-          'type': 'LineString',
-          'coordinates': []
-        }
-      }]
-    };
+	const animateGeojson2 = {
+    'type': 'FeatureCollection',
+    'features': [{
+      'type': 'Feature',
+      'properties': {},
+      'geometry': {
+        'type': 'LineString',
+        'coordinates': []
+      }
+    }]
+  };
+
+	const animateGeojson3 = {
+    'type': 'FeatureCollection',
+    'features': [{
+      'type': 'Feature',
+      'properties': {},
+      'geometry': {
+        'type': 'LineString',
+        'coordinates': []
+      }
+    }]
+  };
 
 function addDataLayer() {
   map.addSource('circleData', {
@@ -206,6 +309,24 @@ function addDataLayer() {
   	'layout': {
   	'line-cap': 'round',
   	'line-join': 'round'
+  	},
+  	'paint': {
+  	'line-color': '#F5F2E4',
+  	'line-width': 4,
+  	'line-opacity': 1
+		}
+	});
+	map.addLayer({
+  	'id': 'line-animation3',
+  	'type': 'line',
+  	'source': {
+  	'type': 'geojson',
+  	'data': geojson3
+  	},
+  	'layout': {
+  	'line-cap': 'round',
+  	'line-join': 'round',
+		'visibility': 'none'
   	},
   	'paint': {
   	'line-color': '#F5F2E4',
@@ -278,6 +399,29 @@ function addDataLayer() {
     	"icon-image": "taxi",
     	"icon-size": 0.07,
     	"icon-rotate": 170
+    }
+    });
+		map.addLayer({
+    	"id": "taxi3",
+    	"type": "symbol",
+    	"source": {
+    	"type": "geojson",
+    	"data": {
+    	"type": "FeatureCollection",
+    	"features": [{
+    	"type": "Feature",
+    	"geometry": {
+    	"type": "Point",
+    	"coordinates": [ 37.64170289039612,
+            55.73324805534146]
+    	}
+    	}]
+    	}
+    	},
+    	"layout": {
+    	"icon-image": "taxi",
+    	"icon-size": 0.07,
+    	"icon-rotate": 45
     }
     });
 	});
@@ -597,6 +741,7 @@ document.getElementById('card').addEventListener('click', function() {
         cancelAnimationFrame(animation);
 				map.setLayoutProperty('line-animation', 'visibility', 'none');
 				map.setLayoutProperty('line-animation1', 'visibility', 'none');
+				map.setLayoutProperty('line-animation3', 'visibility', 'none');
 				map.setLayoutProperty('line-animation2', 'visibility', 'visible');
 
 ///
@@ -614,6 +759,40 @@ document.getElementById('card').addEventListener('click', function() {
       if (progressturf2 === steps2 - 1) {
         cancelAnimationFrame(animation2);
 				map.setLayoutProperty('line-animation2', 'visibility', 'none');
+				map.setLayoutProperty('line-animation3', 'visibility', 'visible');
+
+				///
+				//Line animation
+				const routeLength3 = turf.length(geojson3, { units: 'kilometers' });
+   			 const route3 = [];			
+
+   			 for (let i = 0; i < routeLength3; i += (routeLength3 / steps3)) {
+   			   const segment3 = turf.along(geojson3.features[0], i, { units: 'kilometers' });
+   			   route3.push(segment3.geometry.coordinates);
+   			 }			
+
+   			 // animated in a circle as a sine wave along the map.
+   			 const animateLine3= () => {
+   			   if (progressturf3 === steps3 - 1) {
+   			     cancelAnimationFrame(animation3);
+							map.setLayoutProperty('line-animation3', 'visibility', 'none');
+   			     return;
+   			   } else {
+   			     progressturf3 += 1;
+   			   }			
+
+   			   // append new coordinates to the lineString
+   			   animateGeojson3.features[0].geometry.coordinates.push(route3[progressturf3]);
+   			   // then update the map
+   			   map.getSource('line-animation3').setData(animateGeojson3);			
+
+   			   // Request the next frame of the animation.
+   			   animation3 = requestAnimationFrame(animateLine3);
+   			 };			
+
+   			 animateLine3();
+				///
+
         return;
       } else {
         progressturf2 += 1;
