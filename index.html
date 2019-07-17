@@ -143,7 +143,7 @@ const geojson = {
 const steps = 300;
 let progressturf = 0;
 
-const steps2 = 300;
+const steps2 = 400;
 let progressturf2 = 0;
 
 const animateGeojson = {
@@ -231,31 +231,56 @@ function addDataLayer() {
   	'line-opacity': 1
 		}
 	});
-	map.loadImage('https://raw.githubusercontent.com/lena-emaya/taxi-search-prototype/master/taxi.png', function(error, image) {
-if (error) throw error;
-map.addImage('cat', image);
-map.addLayer({
-"id": "points",
-"type": "symbol",
-"source": {
-"type": "geojson",
-"data": {
-"type": "FeatureCollection",
-"features": [{
-"type": "Feature",
-"geometry": {
-"type": "Point",
-"coordinates": [0, 0]
-}
-}]
-}
-},
-"layout": {
-"icon-image": "cat",
-"icon-size": 0.25
-}
-});
-});
+	map.loadImage('https://raw.githubusercontent.com/lena-emaya/taxi-search-prototype/master/data/taxi.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('taxi', image);
+    map.addLayer({
+    	"id": "taxi1",
+    	"type": "symbol",
+    	"source": {
+    	"type": "geojson",
+    	"data": {
+    	"type": "FeatureCollection",
+    	"features": [{
+    	"type": "Feature",
+    	"geometry": {
+    	"type": "Point",
+    	"coordinates": [37.643558979034424,
+    	            55.73482166099493]
+    	}
+    	}]
+    	}
+    	},
+    	"layout": {
+    	"icon-image": "taxi",
+    	"icon-size": 0.07,
+    	"icon-rotate": 225
+    }
+    });
+		map.addLayer({
+    	"id": "taxi2",
+    	"type": "symbol",
+    	"source": {
+    	"type": "geojson",
+    	"data": {
+    	"type": "FeatureCollection",
+    	"features": [{
+    	"type": "Feature",
+    	"geometry": {
+    	"type": "Point",
+    	"coordinates": [ 37.642250061035156,
+            55.73669117911308]
+    	}
+    	}]
+    	}
+    	},
+    	"layout": {
+    	"icon-image": "taxi",
+    	"icon-size": 0.07,
+    	"icon-rotate": 170
+    }
+    });
+	});
 	map.addLayer({
     id: 'data',
     type: 'circle',
@@ -629,9 +654,9 @@ document.getElementById('card').addEventListener('click', function() {
    
   map.flyTo({
   	center: target,
-  	zoom: 15.0,
+  	zoom: 14.75,
   	bearing: 0,
-  	speed: 0.025, 
+  	speed: 0.035, 
   	curve: 1,
   	easing: function (t) { return t; }
   });
