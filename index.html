@@ -14,15 +14,14 @@
 </head>
 <body>
 <style>
-#fly {
+#card {
   display: block;
   position: absolute;
 	bottom: 0px;
   width: 100%;
-  height: 45px;
-  padding: 10px;
+  height: 20%;
   border: none;
- 
+	z-index:3;
   font-size: 12px;
   text-align: center;
   color: #000;
@@ -33,7 +32,8 @@
 <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
 <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 <div id='map'></div>
-<button id='fly'>поиск</button>
+<div id='card'><img src="card.png" width="100%"/><button id='fly'></button></div>
+
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoieWFjb25zdHJ1Y3QiLCJhIjoiY2l6NDFpN3k1MDAyZjJxbHdhcHU2eHQ0ZyJ9.8TtgxnHPThgkyXRDGGYMlQ';
 
@@ -248,12 +248,12 @@ function addDataLayer() {
     type: 'circle',
     source: 'circleData',
     paint: {
-        "circle-radius": (initialRadius2),
+        "circle-radius": (initialRadius2/1.3),
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-				"circle-opacity": 1,
+				"circle-opacity": 0.5,
         "circle-color": "#FAF8F0",
-				"circle-blur": 2
+			
     },
   });
 	
@@ -604,9 +604,9 @@ document.getElementById('fly').addEventListener('click', function() {
    
   map.flyTo({
   	center: target,
-  	zoom: 14.5,
+  	zoom: 15.0,
   	bearing: 0,
-  	speed: 0.05, 
+  	speed: 0.025, 
   	curve: 1,
   	easing: function (t) { return t; }
   });
