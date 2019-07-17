@@ -58,6 +58,14 @@ var radius = initialRadius;
 var maxRadius = 150;
 
 
+var framesPerSecond2 = 20; 
+var initialOpacity2 = 0.3
+var opacity2 = initialOpacity2;
+var initialRadius2 = 30;
+var radius2 = initialRadius2;
+var maxRadius2 = 100;
+
+
 var speedFactor = 30; // number of frames per longitude degree
 var animation; // to store and cancel the animation
 var startTime = 0;
@@ -132,10 +140,10 @@ const geojson = {
 	}]
 }
 
-const steps = 150;
+const steps = 300;
 let progressturf = 0;
 
-const steps2 = 200;
+const steps2 = 300;
 let progressturf2 = 0;
 
 const animateGeojson = {
@@ -171,7 +179,7 @@ function addDataLayer() {
     },
   });
 	map.addLayer({
-  	'id': 'line-animation',
+  	'id': 'line-animation1',
   	'type': 'line',
   	'source': {
   	'type': 'geojson',
@@ -183,6 +191,24 @@ function addDataLayer() {
   	},
   	'paint': {
   	'line-color': '#fff',
+		'line-blur': 3,
+  	'line-width': 8,
+  	'line-opacity': 0.1
+		}
+	});
+	map.addLayer({
+  	'id': 'line-animation',
+  	'type': 'line',
+  	'source': {
+  	'type': 'geojson',
+  	'data': geojson
+  	},
+  	'layout': {
+  	'line-cap': 'round',
+  	'line-join': 'round'
+  	},
+  	'paint': {
+  	'line-color': '#F5F2E4',
   	'line-width': 4,
   	'line-opacity': 1
 		}
@@ -200,7 +226,7 @@ function addDataLayer() {
 		'visibility': 'none'
   	},
   	'paint': {
-  	'line-color': '#fff',
+  	'line-color': '#FAF8F0',
   	'line-width': 4,
   	'line-opacity': 1
 		}
@@ -213,7 +239,21 @@ function addDataLayer() {
         "circle-radius": initialRadius,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-        "circle-color": "#ccc"
+        "circle-color": "#EDE9D5"
+			
+    },
+  });
+	map.addLayer({
+    id: 'data2',
+    type: 'circle',
+    source: 'circleData',
+    paint: {
+        "circle-radius": (initialRadius2),
+        "circle-radius-transition": {duration: 0},
+        "circle-opacity-transition": {duration: 0},
+				"circle-opacity": 1,
+        "circle-color": "#FAF8F0",
+				"circle-blur": 2
     },
   });
 	
@@ -223,7 +263,7 @@ function addDataLayer() {
     source: 'circleData',
 		layout: {
 			'visibility': 'visible',
-			'icon-image': "white"
+			'icon-image': "main"
 		},
     paint: {
       
@@ -460,6 +500,21 @@ document.getElementById('fly').addEventListener('click', function() {
   // Triggered when `setStyle` is called.
 	// Marker animation
   	addDataLayer();
+		function animateMarker(timestamp) {
+      setTimeout(function(){
+        requestAnimationFrame(animateMarker);
+        radius += (maxRadius2 - radius2) / framesPerSecond2;
+        opacity -= ( .9 / framesPerSecond2 );
+        map.setPaintProperty('data2', 'circle-radius', radius2);
+        map.setPaintProperty('data2', 'circle-opacity', opacity2);
+        if (opacity <= 0) {
+            radius2 = initialRadius2;
+            opacity2= initialOpacity2;
+        } 
+      }, 50 / framesPerSecond2);
+    }
+  	animateMarker(0);
+
 	  function animateMarker(timestamp) {
       setTimeout(function(){
         requestAnimationFrame(animateMarker);
@@ -471,9 +526,11 @@ document.getElementById('fly').addEventListener('click', function() {
             radius = initialRadius;
             opacity = initialOpacity;
         } 
-      }, 1000 / framesPerSecond);
+      }, 3000 / framesPerSecond);
     }
   	animateMarker(0);
+
+		
 		
 		//Line animation
 		const routeLength = turf.length(geojson, { units: 'kilometers' });
@@ -489,6 +546,7 @@ document.getElementById('fly').addEventListener('click', function() {
       if (progressturf === steps - 1) {
         cancelAnimationFrame(animation);
 				map.setLayoutProperty('line-animation', 'visibility', 'none');
+				map.setLayoutProperty('line-animation1', 'visibility', 'none');
 				map.setLayoutProperty('line-animation2', 'visibility', 'visible');
 
 ///
@@ -532,7 +590,7 @@ document.getElementById('fly').addEventListener('click', function() {
       animateGeojson.features[0].geometry.coordinates.push(route[progressturf]);
       // then update the map
       map.getSource('line-animation').setData(animateGeojson);
-
+			map.getSource('line-animation1').setData(animateGeojson);
       // Request the next frame of the animation.
       animation = requestAnimationFrame(animateLine);
     };
