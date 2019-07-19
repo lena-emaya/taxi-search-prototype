@@ -222,13 +222,13 @@ const geojson = {
 	}]
 }
 
-const steps = 400;
+const steps = 250;
 let progressturf = 0;
 
-const steps2 = 400;
+const steps2 = 250;
 let progressturf2 = 0;
 
-const steps3 = 400;
+const steps3 = 250;
 let progressturf3= 0;
 
 const animateGeojson = {
@@ -280,6 +280,7 @@ function addDataLayer() {
   	'type': 'line',
   	'source': {
   	'type': 'geojson',
+    'lineMetrics': true,
   	'data': geojson
   	},
   	'layout': {
@@ -287,10 +288,19 @@ function addDataLayer() {
   	'line-join': 'round'
   	},
   	'paint': {
-  	'line-color': '#FAF8F0',
+      'line-gradient': [
+      'interpolate',
+      ['linear'],
+      ['line-progress'],
+      0, "rgba(255,255,255,0.2)",
+      
+      1, "#FCE000"
+      ],
+
+  	//'line-color': '#FAF8F0',
 		'line-blur': 3,
   	'line-width': 8,
-  	'line-opacity': 0.1
+  	'line-opacity': 0
 		}
 	});
 	map.addLayer({
@@ -298,16 +308,24 @@ function addDataLayer() {
   	'type': 'line',
   	'source': {
   	'type': 'geojson',
+    'lineMetrics': true,
   	'data': geojson
   	},
   	'layout': {
   	'line-cap': 'round',
   	'line-join': 'round'
   	},
-  	'paint': {
+  	'paint': {'line-gradient': [
+      'interpolate',
+      ['linear'],
+      ['line-progress'],
+      0, "rgba(255,255,255,0.2)",
       
-  	'line-color': '#FAF8F0',
-  	'line-width': 4,
+      1, "#F5F2E4"
+      ],
+      
+  	//'line-color': '#F1EEDB',
+  	'line-width': 6,
   	'line-opacity': 1
 		}
 	});
@@ -316,6 +334,7 @@ function addDataLayer() {
   	'type': 'line',
   	'source': {
   	'type': 'geojson',
+    'lineMetrics': true,
   	'data': geojson3
   	},
   	'layout': {
@@ -324,7 +343,15 @@ function addDataLayer() {
 		'visibility': 'none'
   	},
   	'paint': {
-  	'line-color': '#FAF8F0',
+      'line-gradient': [
+      'interpolate',
+      ['linear'],
+      ['line-progress'],
+      0, "rgba(255,255,255,0.2)",
+      
+      1, "#F5F2E4"
+      ],
+  	//'line-color': '#F1EEDB',
   	'line-width': 4,
   	'line-opacity': 1
 		}
@@ -334,6 +361,7 @@ function addDataLayer() {
   	'type': 'line',
   	'source': {
   	'type': 'geojson',
+    'lineMetrics': true,
   	'data': geojson2
   	},
   	'layout': {
@@ -342,7 +370,15 @@ function addDataLayer() {
 		'visibility': 'none'
   	},
   	'paint': {
-  	'line-color': '#FAF8F0',
+      'line-gradient': [
+      'interpolate',
+      ['linear'],
+      ['line-progress'],
+      0, "rgba(255,255,255,0.2)",
+      
+      1, "#F5F2E4"
+      ],
+  	//'line-color': '#F1EEDB',
   	'line-width': 4,
   	'line-opacity': 1
 		}
@@ -428,7 +464,7 @@ function addDataLayer() {
         "circle-radius": initialRadius*400,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-        "circle-color": "#FAF8F0"
+        "circle-color": "#F5F2E4"
 			
     },
   });
