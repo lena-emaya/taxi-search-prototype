@@ -51,19 +51,11 @@ var map = new mapboxgl.Map({
 var isAtStart = true;
 
 var framesPerSecond = 50; 
-var initialOpacity = 1
+var initialOpacity = 1;
 var opacity = initialOpacity;
-var initialRadius = 40;
+var initialRadius = 80;
 var radius = initialRadius;
 var maxRadius = 150;
-
-
-var framesPerSecond2 = 20; 
-var initialOpacity2 = 0.3
-var opacity2 = initialOpacity2;
-var initialRadius2 = 30;
-var radius2 = initialRadius2;
-var maxRadius2 = 100;
 
 
 var speedFactor = 30; // number of frames per longitude degree
@@ -430,26 +422,14 @@ function addDataLayer() {
     type: 'circle',
     source: 'circleData',
     paint: {
-        "circle-radius": initialRadius,
+        "circle-radius": initialRadius*400,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
         "circle-color": "#EDE9D5"
 			
     },
   });
-	map.addLayer({
-    id: 'data2',
-    type: 'circle',
-    source: 'circleData',
-    paint: {
-        "circle-radius": (initialRadius2/1.3),
-        "circle-radius-transition": {duration: 0},
-        "circle-opacity-transition": {duration: 0},
-				"circle-opacity": 0.5,
-        "circle-color": "#FAF8F0",
-			
-    },
-  });
+
 	
 	map.addLayer({
     id: 'data1',
@@ -685,37 +665,60 @@ map.on('load', function () {
 
 	
 document.getElementById('card').addEventListener('click', function() {
-	map.setStyle('mapbox://styles/yaconstruct/cjy5k9lhf0s1l1co5rn02sj8d', true);
-  map.setZoom(16);
-	map.jumpTo({
-		center:	[37.642524, 55.733991]
+  map.addLayer({
+    	"id": "taxi9",
+    	"type": "circle",
+    	"source": {
+    	"type": "geojson",
+    	"data": {
+    	"type": "FeatureCollection",
+    	"features": [{
+    	"type": "Feature",
+    	"geometry": {
+    	"type": "Point",
+    	"coordinates": [ 37.642524, 55.733991]
+    	}
+    	}]
+    	}
+    	},
+    	"paint": {
+    	"circle-radius": 1000,
+    	"circle-color": "#fff"
+    }
+    });
+	
+  map.jumpTo({
+		center:	[37.642524, 55.733991],
+		zoom: 18
 	});
+	
+
+	map.setStyle('mapbox://styles/yaconstruct/cjy5k9lhf0s1l1co5rn02sj8d', true);
+	
+	
 	map.on('style.load', function () {
   // Triggered when `setStyle` is called.
 	// Marker animation
   	addDataLayer();
-		function animateMarker(timestamp) {
-      setTimeout(function(){
-        requestAnimationFrame(animateMarker);
-        radius += (maxRadius2 - radius2) / framesPerSecond2;
-        opacity -= ( .9 / framesPerSecond2 );
-        map.setPaintProperty('data2', 'circle-radius', radius2);
-        map.setPaintProperty('data2', 'circle-opacity', opacity2);
-        if (opacity <= 0) {
-            radius2 = initialRadius2;
-            opacity2= initialOpacity2;
-        } 
-      }, 50 / framesPerSecond2);
-    }
-  	animateMarker(0);
+		
 
 	  function animateMarker(timestamp) {
       setTimeout(function(){
         requestAnimationFrame(animateMarker);
-        radius += (maxRadius - radius) / framesPerSecond;
+        radius += ([maxRadius] - radius) / framesPerSecond;
+        
         opacity -= ( .9 / framesPerSecond );
-        map.setPaintProperty('data', 'circle-radius', radius);
+        map.setPaintProperty('data', 'circle-radius', [
+  "interpolate",
+  ["linear"],
+  ["zoom"],
+  16,
+  radius,
+  17,
+  radius*7
+]);
         map.setPaintProperty('data', 'circle-opacity', opacity);
+        
         if (opacity <= 0) {
             radius = initialRadius;
             opacity = initialOpacity;
@@ -835,7 +838,7 @@ document.getElementById('card').addEventListener('click', function() {
   	center: target,
   	zoom: 14.75,
   	bearing: 0,
-  	speed: 0.035, 
+  	speed: 0.05, 
   	curve: 1,
   	easing: function (t) { return t; }
   });
