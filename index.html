@@ -338,7 +338,7 @@ function addDataLayer() {
       ],
       
   	//'line-color': '#F1EEDB',
-  	'line-width': 6,
+  	'line-width': 5,
   	'line-opacity': 1
 		}
 	});
@@ -365,7 +365,7 @@ function addDataLayer() {
       1, "#F5F2E4"
       ],
   	//'line-color': '#F1EEDB',
-  	'line-width': 4,
+  	'line-width': 5,
   	'line-opacity': 1
 		}
 	});
@@ -392,7 +392,7 @@ function addDataLayer() {
       1, "#F5F2E4"
       ],
   	//'line-color': '#F1EEDB',
-  	'line-width': 4,
+  	'line-width': 5,
   	'line-opacity': 1
 		}
 	});
@@ -787,7 +787,7 @@ document.getElementById('card').addEventListener('click', function() {
     }
   	animateMarker1(0);
 
-		var radiusYa = 0.00005;
+		var radiusYa = 0.00001;
  
     function pointOnCircle(angle) {
     return {
@@ -817,7 +817,7 @@ layout: {
 function animateMarker(timestamp) {
 // Update the data to a new position based on the animation timestamp. The
 // divisor in the expression `timestamp / 1000` controls the animation speed.
-map.getSource('point').setData(pointOnCircle(timestamp / 1500));
+map.getSource('point').setData(pointOnCircle(timestamp / 1000));
  
 // Request the next frame of the animation.
 requestAnimationFrame(animateMarker);
