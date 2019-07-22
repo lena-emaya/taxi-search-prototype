@@ -47,6 +47,17 @@ var map = new mapboxgl.Map({
     zoom: 12.05
 });
 
+var radiusYa = 0.00005;
+ 
+function pointOnCircle(angle) {
+return {
+"type": "Point",
+"coordinates": [
+37.641694 + Math.cos(angle)*0 ,
+55.734704 + Math.sin(angle)*radiusYa
+]
+};
+}
 
 var isAtStart = true;
 
@@ -63,6 +74,8 @@ var animation; // to store and cancel the animation
 var startTime = 0;
 var progress = 0; // progress = timestamp - startTime
 var resetTime = false;
+
+
 
 const geojson3 = {
 	"type": "FeatureCollection",
@@ -468,20 +481,21 @@ function addDataLayer() {
 			
     },
   });
-
-	
-	map.addLayer({
+  map.addLayer({
     id: 'data1',
     type: 'symbol',
     source: 'circleData',
 		layout: {
-			'visibility': 'visible',
+			'visibility': 'none',
 			'icon-image': "main"
 		},
     paint: {
       
     }
   });
+  
+
+ 
 	
 }
 
@@ -743,25 +757,26 @@ document.getElementById('card').addEventListener('click', function() {
   // Triggered when `setStyle` is called.
 	// Marker animation
   	addDataLayer();
-		
+   
+	
 
-	  function animateMarker(timestamp) {
+	  function animateMarker1(timestamp) {
       setTimeout(function(){
-        requestAnimationFrame(animateMarker);
+        requestAnimationFrame(animateMarker1);
         radius += ([maxRadius] - radius) / framesPerSecond;
         
         opacity -= ( .9 / framesPerSecond );
         map.setPaintProperty('data', 'circle-radius', [
-  "interpolate",
-  ["linear"],
-  ["zoom"],
-  16,
-  radius,
-  16.55,
-  radius,
-  17,
-  radius*3
-]);
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          16,
+          radius,
+          16.55,
+          radius,
+          17,
+          radius*3
+        ]);
         map.setPaintProperty('data', 'circle-opacity', opacity);
         
         if (opacity <= 0) {
@@ -770,9 +785,47 @@ document.getElementById('card').addEventListener('click', function() {
         } 
       }, 3000 / framesPerSecond);
     }
-  	animateMarker(0);
+  	animateMarker1(0);
 
-		
+		var radiusYa = 0.00005;
+ 
+    function pointOnCircle(angle) {
+    return {
+    "type": "Point",
+    "coordinates": [
+    37.642524 + Math.cos(angle)*0 ,
+    55.733991 + Math.sin(angle)*radiusYa
+    ]
+    };
+    }
+
+    map.addSource('point', {
+"type": "geojson",
+"data": pointOnCircle(0)
+});
+ 
+map.addLayer({
+"id": "point",
+"source": "point",
+"type": "symbol",
+layout: {
+			'visibility': 'visible',
+			'icon-image': "main"
+		}
+});
+
+function animateMarker(timestamp) {
+// Update the data to a new position based on the animation timestamp. The
+// divisor in the expression `timestamp / 1000` controls the animation speed.
+map.getSource('point').setData(pointOnCircle(timestamp / 1500));
+ 
+// Request the next frame of the animation.
+requestAnimationFrame(animateMarker);
+}
+ 
+// Start the animation.
+animateMarker(0);
+
 		
 		//Line animation
 		const routeLength = turf.length(geojson, { units: 'kilometers' });
@@ -888,8 +941,6 @@ document.getElementById('card').addEventListener('click', function() {
   	easing: function (t) { return t; }
   });
 
-	
-  
 
 
 });
