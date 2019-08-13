@@ -6,9 +6,10 @@ var end = [37.642524, 55.733991];
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/yaconstruct/cjx39riro074v1dpkcudfer4w',
-    center: [37.642524, 55.737991],
+    center: [37.642524, 55.7350],
     zoom: 12.05
 });
+
 
 var radiusYa = 0.00005;
  
@@ -198,13 +199,13 @@ const geojson = {
 	}]
 }
 
-const steps = 400;
+const steps = 200;
 let progressturf = 0;
 
-const steps2 = 500;
+const steps2 = 200;
 let progressturf2 = 0;
 
-const steps3 = 700;
+const steps3 = 200;
 let progressturf3= 0;
 
 const animateGeojson = {
@@ -712,10 +713,13 @@ map.on('load', function () {
 });
 
 	
-document.getElementById('card').addEventListener('click', function() {
+document.getElementById('summary').addEventListener('click', function() {
   
-  
-  
+    function hideMenu() {
+        document.getElementById('summary').style.display = 'none';
+        document.getElementById('search').style.display = 'block';
+      }
+      hideMenu()
 	
   map.jumpTo({
 		center:	[37.642524, 55.733991],
@@ -849,8 +853,16 @@ animateMarker(0);
    			 const animateLine3= () => {
    			   if (progressturf3 === steps3 - 1) {
    			     cancelAnimationFrame(animation3);
-							map.setLayoutProperty('line-animation3', 'visibility', 'none');
-   			     return;
+                        map.setLayoutProperty('line-animation3', 'visibility', 'none');
+                        map.setStyle('mapbox://styles/yaconstruct/cjx39riro074v1dpkcudfer4w', true);
+                        map.setLayoutProperty('routeline', 'visibility', 'visible');
+                        function hideMenu2() {
+                            document.getElementById('search').style.display = 'none';
+                            document.getElementById('driving').style.display = 'block';
+                          }
+                          hideMenu2()
+                    return;
+                    
    			   } else {
    			     progressturf3 += 1;
    			   }			
@@ -864,7 +876,8 @@ animateMarker(0);
    			   animation3 = requestAnimationFrame(animateLine3);
    			 };			
 
-   			 animateLine3();
+                animateLine3();
+                
 				///
 
         return;
@@ -891,11 +904,13 @@ animateMarker(0);
 
       // append new coordinates to the lineString
       animateGeojson.features[0].geometry.coordinates.push(route[progressturf]);
+      
       // then update the map
       map.getSource('line-animation').setData(animateGeojson);
 			map.getSource('line-animation1').setData(animateGeojson);
       // Request the next frame of the animation.
       animation = requestAnimationFrame(animateLine);
+      
     };
 
     animateLine();
