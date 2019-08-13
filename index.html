@@ -18,7 +18,7 @@
   
   position: fixed;
 	
-  top: 400px;
+  top: 350px;
 	z-index:2;
 
 }
@@ -328,7 +328,7 @@ function addDataLayer() {
       ['line-progress'],
       0, "#fff",
       
-      1, "#406080"
+      1, "#0596FA"
       ],
       
   	//'line-color': '#F1EEDB',
@@ -356,7 +356,7 @@ function addDataLayer() {
       ['line-progress'],
       0, "#fff",
       
-      1, "#406080"
+      1, "#0596FA"
       ],
   	//'line-color': '#F1EEDB',
   	'line-width': 4,
@@ -383,7 +383,7 @@ function addDataLayer() {
       ['line-progress'],
        0, "#fff",
       
-      1, "#406080"
+      1, "#0596FA"
       ],
   	//'line-color': '#F1EEDB',
   	'line-width': 4,
@@ -471,7 +471,7 @@ function addDataLayer() {
         "circle-radius": initialRadius*400,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-        "circle-color": "#DAE3E6"
+        "circle-color": "#ccc"
 			
     },
   });
@@ -645,9 +645,9 @@ map.on('load', function () {
         ["linear"],
         ["zoom"],
         9,
-        5,
+        3,
         22,
-        13
+        10
       ],
       // 'line-gradient' must be specified using an expression
       // with the special 'line-progress' property
@@ -671,9 +671,9 @@ map.on('load', function () {
         ["linear"],
         ["zoom"],
         9,
-        2,
+        1.5,
         22,
-        8
+        6
       ],
       // 'line-gradient' must be specified using an expression
       // with the special 'line-progress' property
@@ -699,8 +699,8 @@ map.on('load', function () {
     type: 'symbol',
     source: 'a',
 		layout: {
-			'visibility': 'visible',
-			"icon-image": "pin_pin"
+			"icon-size": 0.8,
+			"icon-image": "location"
 		},
     paint: {
       
@@ -708,16 +708,15 @@ map.on('load', function () {
   });
 	map.addLayer({
     id: 'b',
-    type: 'symbol',
+    type: 'circle',
     source: 'b',
-		layout: {
-			'visibility': 'visible',
-			"icon-image": "Default"
-		},
 		
     paint: {
-      
-    },
+      'circle-radius': 2,
+      'circle-stroke-width': 3,
+      'circle-color': '#fff',
+      'circle-stroke-color': '#0596FA'
+    }
   });
   map.addLayer({
     	"id": "taxi9",
