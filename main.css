@@ -2,6 +2,12 @@ body { margin:0; padding:0; }
 #map { position:absolute; top:0; bottom:0; width:100%; z-index:0;}
 #card {
   position: fixed; 
-  top: 350px;
+  top: 320px;
   z-index:2;
+}
+.mapboxgl-ctrl-logo{
+	opacity: 0;
+}
+.mapboxgl-ctrl-bottom-right > .mapboxgl-ctrl-attrib.mapboxgl-compact::after {
+	opacity: 0;
 }
