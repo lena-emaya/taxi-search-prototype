@@ -205,7 +205,7 @@ let progressturf = 0;
 const steps2 = 400;
 let progressturf2 = 0;
 
-const steps3 = 300;
+const steps3 = 400;
 let progressturf3= 0;
 
 const animateGeojson = {
@@ -854,7 +854,9 @@ animateMarker(0);
    			   if (progressturf3 === steps3 - 1) {
    			     cancelAnimationFrame(animation3);
                         map.setLayoutProperty('line-animation3', 'visibility', 'none');
+                       
                         map.setStyle('mapbox://styles/yaconstruct/cjx39riro074v1dpkcudfer4w', true);
+                        
                         map.loadImage('https://raw.githubusercontent.com/lena-emaya/taxi-search-prototype/master/data/taxi.png', function(error, image) {
     if (error) throw error;
     map.addImage('taxi_new', image);
