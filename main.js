@@ -202,10 +202,10 @@ const geojson = {
 const steps = 200;
 let progressturf = 0;
 
-const steps2 = 200;
+const steps2 = 400;
 let progressturf2 = 0;
 
-const steps3 = 200;
+const steps3 = 300;
 let progressturf3= 0;
 
 const animateGeojson = {

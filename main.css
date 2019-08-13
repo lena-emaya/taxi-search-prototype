@@ -15,7 +15,7 @@ body { margin:0; padding:0; }
 
 #summary {
   position: fixed; 
-  bottom: -20px;
+  bottom: -5px;
 	z-index:2;
 	padding: 0
 }
