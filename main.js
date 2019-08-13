@@ -855,12 +855,64 @@ animateMarker(0);
    			     cancelAnimationFrame(animation3);
                         map.setLayoutProperty('line-animation3', 'visibility', 'none');
                         map.setStyle('mapbox://styles/yaconstruct/cjx39riro074v1dpkcudfer4w', true);
-                        map.setLayoutProperty('routeline', 'visibility', 'visible');
+                        map.loadImage('https://raw.githubusercontent.com/lena-emaya/taxi-search-prototype/master/data/taxi.png', function(error, image) {
+    if (error) throw error;
+    map.addImage('taxi_new', image);
+    map.addLayer({
+    	"id": "taxi_new",
+    	"type": "symbol",
+    	"source": {
+    	"type": "geojson",
+    	"data": {
+    	"type": "FeatureCollection",
+    	"features": [{
+    	"type": "Feature",
+    	"geometry": {
+    	"type": "Point",
+    	"coordinates": [37.643558979034424,
+    	            55.73482166099493]
+    	}
+    	}]
+    	}
+    	},
+    	"layout": {
+    	"icon-image": "taxi_new",
+    	"icon-size": 0.07,
+    	"icon-rotate": 225
+    }
+    })});
+    map.addSource('a_new', {
+        type: 'geojson',
+        data: {
+            type: 'Point',
+            coordinates: [37.642524, 55.733991]
+        }
+      });
+      map.addLayer({
+        id: 'a_new',
+        type: 'symbol',
+        source: 'a_new',
+            layout: {
+                "icon-size": 0.8,
+                "icon-image": "location"
+            },
+        paint: {
+          
+        },
+      });
+                        
                         function hideMenu2() {
                             document.getElementById('search').style.display = 'none';
                             document.getElementById('driving').style.display = 'block';
                           }
                           hideMenu2()
+                          document.getElementById('driving').addEventListener('click', function() {
+                            
+                              
+                                location.reload();
+                              
+                          })
+                         
                     return;
                     
    			   } else {
