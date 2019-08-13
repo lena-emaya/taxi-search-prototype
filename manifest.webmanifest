@@ -1,8 +1,8 @@
 {
     "background_color": "purple",
-    "description": "Shows random fox pictures. Hey, at least it isn't cats.",
+    "description": "Prototype",
     "display": "fullscreen",
-    "name": "Awesome fox pictures",
-    "short_name": "Foxes",
-    "start_url": "/pwa-examples/a2hs/index.html"
+    "name": "Prototype",
+    "short_name": "Search prototype",
+    "start_url": "https://lena-emaya.github.io/taxi-search-prototype/"
   }
