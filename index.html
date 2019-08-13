@@ -9,24 +9,18 @@
 		
     <style>
         body { margin:0; padding:0; }
-        #map { position:absolute; z-index:0;top:0; bottom:0; width:100%; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
     </style>
 </head>
 <body>
 <style>
 #card {
-  display: block;
+  
   position: absolute;
-	bottom: 0px;
-  width: 100%;
-  height: 20%;
-  border: none;
-	z-index:3;
-  font-size: 12px;
-  text-align: center;
-  color: #000;
-  background: #fff;
-	outline-color: rgba(0,0,0,0)
+	
+  top: 400px;
+	z-index:1;
+
 }
 </style>
 <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
@@ -62,7 +56,7 @@ return {
 var isAtStart = true;
 
 var framesPerSecond = 200; 
-var initialOpacity = 0.5;
+var initialOpacity = 0.65;
 var opacity = initialOpacity;
 var initialRadius = 50;
 var radius = initialRadius;
@@ -238,10 +232,10 @@ const geojson = {
 const steps = 250;
 let progressturf = 0;
 
-const steps2 = 250;
+const steps2 = 400;
 let progressturf2 = 0;
 
-const steps3 = 250;
+const steps3 = 500;
 let progressturf3= 0;
 
 const animateGeojson = {
@@ -305,9 +299,9 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-      0, "rgba(255,255,255,0.2)",
+      0, "#3F96F3",
       
-      1, "#FCE000"
+      1, "#CCCCCC"
       ],
 
   	//'line-color': '#FAF8F0',
@@ -332,9 +326,9 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-      0, "rgba(255,255,255,0.2)",
+      0, "#3F96F3",
       
-      1, "#F5F2E4"
+      1, "#CCCCCC"
       ],
       
   	//'line-color': '#F1EEDB',
@@ -360,9 +354,9 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-      0, "rgba(255,255,255,0.2)",
+      0, "#3F96F3",
       
-      1, "#F5F2E4"
+      1, "#CCCCCC"
       ],
   	//'line-color': '#F1EEDB',
   	'line-width': 5,
@@ -387,9 +381,9 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-      0, "rgba(255,255,255,0.2)",
+       0, "#3F96F3",
       
-      1, "#F5F2E4"
+      1, "#CCCCCC"
       ],
   	//'line-color': '#F1EEDB',
   	'line-width': 5,
@@ -477,7 +471,18 @@ function addDataLayer() {
         "circle-radius": initialRadius*400,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-        "circle-color": "#F5F2E4"
+        "circle-color": "#ccc"
+			
+    },
+  });
+  map.addLayer({
+    id: 'data2',
+    type: 'circle',
+    source: 'circleData',
+    paint: {
+        "circle-radius": 17,
+        "circle-blur": 1,
+        "circle-color": "#ccc"
 			
     },
   });
@@ -666,9 +671,9 @@ map.on('load', function () {
         ["linear"],
         ["zoom"],
         9,
-        3,
+        2,
         22,
-        10
+        8
       ],
       // 'line-gradient' must be specified using an expression
       // with the special 'line-progress' property
@@ -750,7 +755,7 @@ document.getElementById('card').addEventListener('click', function() {
 	});
 	
 
-	map.setStyle('mapbox://styles/yaconstruct/cjy5k9lhf0s1l1co5rn02sj8d', true);
+	map.setStyle('mapbox://styles/yaconstruct/cjz9hj07w04fw1co9f74uo1zh', true);
 	
 	
 	map.on('style.load', function () {
@@ -775,7 +780,7 @@ document.getElementById('card').addEventListener('click', function() {
           16.55,
           radius,
           17,
-          radius*3
+          radius*2
         ]);
         map.setPaintProperty('data', 'circle-opacity', opacity);
         
