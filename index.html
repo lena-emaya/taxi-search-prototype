@@ -229,13 +229,13 @@ const geojson = {
 	}]
 }
 
-const steps = 250;
+const steps = 400;
 let progressturf = 0;
 
-const steps2 = 400;
+const steps2 = 500;
 let progressturf2 = 0;
 
-const steps3 = 500;
+const steps3 = 700;
 let progressturf3= 0;
 
 const animateGeojson = {
@@ -326,13 +326,13 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-      0, "#3F96F3",
+      0, "#fff",
       
-      1, "#CCCCCC"
+      1, "#406080"
       ],
       
   	//'line-color': '#F1EEDB',
-  	'line-width': 5,
+  	'line-width': 4,
   	'line-opacity': 1
 		}
 	});
@@ -354,12 +354,12 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-      0, "#3F96F3",
+      0, "#fff",
       
-      1, "#CCCCCC"
+      1, "#406080"
       ],
   	//'line-color': '#F1EEDB',
-  	'line-width': 5,
+  	'line-width': 4,
   	'line-opacity': 1
 		}
 	});
@@ -381,12 +381,12 @@ function addDataLayer() {
       'interpolate',
       ['linear'],
       ['line-progress'],
-       0, "#3F96F3",
+       0, "#fff",
       
-      1, "#CCCCCC"
+      1, "#406080"
       ],
   	//'line-color': '#F1EEDB',
-  	'line-width': 5,
+  	'line-width': 4,
   	'line-opacity': 1
 		}
 	});
@@ -471,7 +471,7 @@ function addDataLayer() {
         "circle-radius": initialRadius*400,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-        "circle-color": "#ccc"
+        "circle-color": "#DAE3E6"
 			
     },
   });
@@ -482,7 +482,7 @@ function addDataLayer() {
     paint: {
         "circle-radius": 17,
         "circle-blur": 1,
-        "circle-color": "#ccc"
+        "circle-color": "#B3B3B3"
 			
     },
   });
