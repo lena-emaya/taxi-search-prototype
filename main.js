@@ -25,10 +25,10 @@ return {
 
 var isAtStart = true;
 
-var framesPerSecond = 200; 
-var initialOpacity = 0.65;
+var framesPerSecond = 1000; 
+var initialOpacity = 0.1;
 var opacity = initialOpacity;
-var initialRadius = 50;
+var initialRadius = 100;
 var radius = initialRadius;
 var maxRadius = 250;
 
@@ -438,10 +438,14 @@ function addDataLayer() {
     type: 'circle',
     source: 'circleData',
     paint: {
-        "circle-radius": initialRadius*400,
+        "circle-radius": initialRadius,
         "circle-radius-transition": {duration: 0},
         "circle-opacity-transition": {duration: 0},
-        "circle-color": "#ccc"
+        "circle-color": "rgba(0,0,0,0)",
+        "circle-stroke-color": "#0596FA", 
+        "circle-stroke-width": 4,
+        "circle-blur": 0.3,
+        "circle-stroke-opacity": 0.5
 			
     },
   });
@@ -727,7 +731,7 @@ document.getElementById('summary').addEventListener('click', function() {
 	});
 	
 
-	map.setStyle('mapbox://styles/yaconstruct/cjz9hj07w04fw1co9f74uo1zh', true);
+	map.setStyle('mapbox://styles/yaconstruct/cjzb3ss3z07np1cpcz875vgb9', true);
 	
 	
 	map.on('style.load', function () {
@@ -743,18 +747,10 @@ document.getElementById('summary').addEventListener('click', function() {
         radius += ([maxRadius] - radius) / framesPerSecond;
         
         opacity -= ( .9 / framesPerSecond );
-        map.setPaintProperty('data', 'circle-radius', [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          16,
-          radius,
-          16.55,
-          radius,
-          17,
-          radius*2
-        ]);
+        map.setPaintProperty('data', 'circle-radius',
+          radius);
         map.setPaintProperty('data', 'circle-opacity', opacity);
+       
         
         if (opacity <= 0) {
             radius = initialRadius;
