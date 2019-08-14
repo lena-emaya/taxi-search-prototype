@@ -25,7 +25,7 @@ return {
 
 var isAtStart = true;
 
-var framesPerSecond = 1000; 
+var framesPerSecond = 10000; 
 var initialOpacity = 0.1;
 var opacity = initialOpacity;
 var initialRadius = 100;
